@@ -1,3 +1,7 @@
+---
+layout: page
+title: eduroam JP申請システム
+---
 ### １．概要
 
 eduroam JP申請システムは学術無線LANローミング基盤サービス eduroam JP に対する、加入/変更/脱退申請を  

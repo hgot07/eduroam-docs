@@ -1,6 +1,6 @@
 ---
 layout: page
-title: ""
+title: 認証テストツール
 <!-- permalink: /tech/:basename -->
 ---
 

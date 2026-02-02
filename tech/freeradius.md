@@ -1,7 +1,6 @@
 ---
 layout: page
-title: ""
-permalink:
+title: FreeRADIUS 3 によるRADIUSサーバ構築
 ---
 
 改訂履歴

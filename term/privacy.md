@@ -1,3 +1,7 @@
+---
+layout: page
+title: eduroam JPプライバシーポリシー
+---
 はじめに
 ====
 

@@ -1,6 +1,6 @@
 ---
 layout: page
-title: ""
+title: EAP-TLS
 ---
 
 RADIUSサーバにおいてクライアント証明書を用いた認証を行う設定のサンプルです。

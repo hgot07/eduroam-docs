@@ -1,6 +1,6 @@
 ---
 layout: page
-title: ""
+title: eduroam CAT
 ---
 
 [eduroam CAT (Configuration Assistant Tool)](https://cat.eduroam.org/)の設定方法についてのまとめです。
