@@ -4,16 +4,12 @@ title: eduroam JP申請システム
 ---
 ### １．概要
 
-eduroam JP申請システムは学術無線LANローミング基盤サービス eduroam JP に対する、加入/変更/脱退申請を  
-行うためのシステムです。  
+eduroam JP申請システムは学術無線LANローミング基盤サービス eduroam JP に対する、加入/変更/脱退申請を行うためのシステムです。  
 また、代理認証システムおよび認証連携IDサービスについて、個別に利用の申請/利用停止の申請が行えます。  
-このシステムは学認に参加するSPとなっています。利用にあたっては、学認参加機関であれば自機関のIdPと認証連携  
-可能なように設定する必要があります。
+このシステムは学認に参加するSPとなっています。利用にあたっては、学認参加機関であれば自機関のIdPと認証連携可能なように設定する必要があります。
 
-**学認非参加機関、あるいは、自機関のIdPからePPNを送信できない機関の場合は、**  
-**Orthrosにアカウントを作成してログインすることができます。  
-※申請システムトップページの機関選択リストから最下方にあるOrthrosを選択し、Orthrosで作成したアカウントで  
-　申請システムにログインしてください。**
+**学認非参加機関、あるいは、自機関のIdPからePPNを送信できない機関の場合は、Orthrosにアカウントを作成してログインすることができます。  
+※申請システムトップページの機関選択リストから最下方にあるOrthrosを選択し、Orthrosで作成したアカウントで申請システムにログインしてください。**
 
 eduroam JP申請システム：[https://office.eduroam.jp/](https://office.eduroam.jp/)
 
@@ -74,21 +70,15 @@ eduroam JP申請システム（entityID: https://office.eduroam.jp/shibboleth-sp
 
 #### 学認参加IdPのattribute-filter.xmlに追記する内容
 
-[?](#)
-
-`<!-- Policy` `for` `Eduroam Office -->`
-
-`<AttributeFilterPolicy id=``"PolicyforEduroamOffice"``>`
-
-`<PolicyRequirementRule xsi:type=``"Requester"` `value=``"[https://office.eduroam.jp/shibboleth-sp](https://office.eduroam.jp/shibboleth-sp)"` `/>`
-
-`<AttributeRule attributeID=``"eduPersonPrincipalName"``>`
-
-`<PermitValueRule xsi:type=``"ANY"` `/>`
-
-`</AttributeRule>`
-
-`</AttributeFilterPolicy>`
+```XML
+<!-- Policy for eduroam Office -->
+<AttributeFilterPolicy id="PolicyforEduroamOffice">
+  <PolicyRequirementRule xsi:type="Requester" value="https://office.eduroam.jp/shibboleth-sp"/>
+  <AttributeRule attributeID="eduPersonPrincipalName">
+    <PermitValueRule xsi:type="ANY"/>
+  </AttributeRule>
+</AttributeFilterPolicy>
+```
 
 ### ４．マニュアル
 
