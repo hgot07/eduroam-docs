@@ -48,8 +48,6 @@ eduroam が利用できる場所を記述するには次の情報が必須とな
 
 | 項目名 | 必須  | 値   | 記入の勘どころ |
 | --- | --- | --- | --- |
-| 項目名 | 必須  | 値   | 記入の勘どころ |
-| --- | --- | --- | --- |
 | 基地局名称(英語) | ●   | X Campus, A University | キャンパス名を記入します |
 | 基地局名称(日本語) | ●   | A大学 Xキャンパス |     |
 | 基地局緯度・経度\* | ●   | 35.692712,139.757938 | キャンパスを指定する代表的な場所の緯度、経度を記入します |
@@ -75,7 +73,7 @@ FAQ
 *   Q: "institution" シートには「機関Web URL」と「機関ポリシURL」なる項目があります。これらはどのようなものでしょうか？
 *   A: eduroam database (原文) には次のように説明されています：
     
-    |     |     |
+    | field name | field description |
     | --- | --- |
     | 機関Web URL | institution's web page with the information related to the service |
     | 機関ポリシ URL | institution's Policy |
