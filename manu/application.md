@@ -64,8 +64,6 @@ eduroam JP申請システム（entityID: https://office.eduroam.jp/shibboleth-sp
 
 | 属性  | 用途  |
 | --- | --- |
-| 属性  | 用途  |
-| --- | --- |
 | eduPersonPrincipalName | 利用者を特定するため。 |
 
 #### 学認参加IdPのattribute-filter.xmlに追記する内容
