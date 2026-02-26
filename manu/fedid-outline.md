@@ -40,8 +40,8 @@ title: eduroam JP 認証連携 ID サービスについて
 - [認証連携 ID サービス利用ガイド（ユーザ向け）](fedid-guide4user.md)  
   [User Guide to eduroam JP Federated ID Service (in English)](fedid-guide4user_en.md)
 - [認証連携 ID サービス利用ガイド（管理者向け）](fedid-guide4admin.md)
+  - [代理認証機能](post-deas.md)
 - [認証連携 ID サービス利用規約](../term/fedid-tos.md)
-- [代理認証機能](post-deas.md)
 
 ## 4. 補遺
 ### 4.1. レルム
