@@ -65,67 +65,48 @@ title: FreeRADIUS 3 によるRADIUSサーバ構築
     機関内の無線LANコントローラや、他のRADIUS proxyも、このファイルに記述することでアクセス許可されます。
     * **mods-available/eap**  
     FreeRADIUSが自動的に作成したサーバ証明書で動作確認の後、正規のサーバ証明書を用意して、ファイル中の `private_key_password`, `private_key_file`, `certificate_file`, `ca_file` を適宜書き換えて下さい。UPKI電子証明書発行サービスなどのサーバ証明書が利用できます。  
-        > [!NOTE]  
-        > サーバ認証において、公共のCAから発行された証明書を用いた場合、プライベートのCA証明書を端末に導入する煩雑さを回避できます。しかし、公共のCAを利用する場合、サーバ証明書のドメイン名を確実に確認できるように、端末を設定する必要があります。
-<!--
-    [!NOTE]  
-    サーバ認証において、公共のCAから発行された証明書を用いた場合、プライベートのCA証明書を端末に導入する煩雑さを回避できます。  
-    しかし、公共のCAを利用する場合、サーバ証明書のドメイン名を確実に確認できるように、端末を設定する必要があります。
-    [!WARNING]  
-    EAP-TLSのクライアント認証のフェーズでは、公共のCAを使うべきではありません (eapファイルにコメントあり)。   
-    サンプルのファイルでは、EAP-TLS認証が無効になるように、該当するセクションをコメントアウトしてあります
--->
-    *   **mods-config/files/authorize**  
+        * 注意: サーバ認証において、公共のCAから発行された証明書を用いた場合、プライベートのCA証明書を端末に導入する煩雑さを回避できます。  
+        しかし、公共のCAを利用する場合、サーバ証明書のドメイン名を確実に確認できるように、端末を設定する必要があります。
+        * 注意2: EAP-TLSのクライアント認証のフェーズでは、公共のCAを使うべきではありません (eapファイルにコメントあり)。   
+        サンプルのファイルでは、EAP-TLS認証が無効になるように、該当するセクションをコメントアウトしてあります
+    * **mods-config/files/authorize**  
     基本的には空にします。テストアカウントや少人数のアカウントは、このファイルに記述できます。  
-    *   **sites-available/nonexistent**, **sites-enabled/nonexistent**  
+    * **sites-available/nonexistent**, **sites-enabled/nonexistent**  
     FreeRADIUSのパッケージに含まれないファイルです。機関に存在しないレルムを受信した際に、その旨をエラーとして返すためのvirtual server定義です。サンプルのtarファイルに含まれているものをコピーして、Example Universityの部分を自機関の名前に書き換えてください。  
-    *   **policy.d/filter**  
+    * **policy.d/filter**  
     FreeRADIUS 3.x系の一部に、`reject mixed case` という(不正な)ルールが有効になっているものがあります。この処理がコメントアウト（無効化）されていることを確認してください。FreeRADIUS 3.2.0では最初から無効になっているはずです。(eduroamのアカウントは、ユーザ名が case sensitive (大文字小文字を区別する)、レルム名が case insensitive (大小区別しない)です。)
 
-* * *
+# 動作確認
 
-動作確認
-----
-
-1.  テスト用のアカウントを登録します (mods-config/files/authorizeに書き込む)。
-2.  debugモードでradiusサーバを起動します。
+1. テスト用のアカウントを登録します (mods-config/files/authorizeに書き込む)。
+2. debugモードでradiusサーバを起動します。
+   ```
+   # /usr/local/freeradius/3.2.0/sbin/radiusd -fxx -l stdout
+   ```
+    * rootで実行してください。
+    * オプション `-fxx -l stdout` を付けているので、デーモンではなく通常のプロセスとして動作します。
+3. パスを通した後、テスト用コマンドを実行します。
+   ```
+   # export PATH=$PATH:/usr/local/freeradius/3.2.0/bin
+   # radtest ユーザ名@example.ac.jp パスワード localhost 1 testing123
+   # radtest -t mschap ユーザ名@example.ac.jp パスワード localhost 1 testing123
+   # radtest -t mschap ユーザ名@example.ac.jp パスワード localhost:18120 1 testing123
+   ```
+    * radiusサーバの起動に失敗した場合には設定を見直してください。
+    * テスト用コマンドで認証が成功すると"Access-Accept"と表示されます。
+    * 最後のradtestはinner-tunnelの確認のためのもので、もしこれが認証失敗する場合は、実際の端末からの認証が失敗することになります。
+    * 正常動作が確認できたら、オプション `-fxx -l stdout` を付けないで `radiusd` を起動します。システム起動時に `radiusd` が立ち上がるように、OSのスタートアップファイルに追記します (使用しているOSやディストリビューションによって設定方法が異なります)。
+4. 動作確認後は、必ずテスト用アカウントを削除して、`radiusd` を再起動してください。
     
-    ```
-    # /usr/local/freeradius/3.2.0/sbin/radiusd -fxx -l stdout
-    ```
-    
-    *   rootで実行してください。
-    *   オプション \-fxx -l stdout を付けているので、デーモンではなく通常のプロセスとして動作します。
-3.  パスを通した後、テスト用コマンドを実行します。
-    
-    ```
-    # export PATH=$PATH:/usr/local/freeradius/3.2.0/bin
-    # radtest ユーザ名@example.ac.jp パスワード localhost 1 testing123
-    # radtest -t mschap ユーザ名@example.ac.jp パスワード localhost 1 testing123
-    
-    # radtest -t mschap ユーザ名@example.ac.jp パスワード localhost:18120 1 testing123
-    ```
-    
-    *   radiusサーバの起動に失敗した場合には設定を見直してください。
-    *   テスト用コマンドで認証が成功すると"Access-Accept"と表示されます。
-    *   最後のradtestはinner-tunnelの確認のためのもので、もしこれが認証失敗する場合は、実際の端末からの認証が失敗することになります。
-    *   正常動作が確認できたら、オプション -fxx -l stdoutを付けないで radiusd を起動します。システム起動時に radiusd が立ち上がるように、OSのスタートアップファイルに追記します (使用しているOSやディストリビューションによって設定方法が異なります)。
-4.  動作確認後は、必ずテスト用アカウントを削除して、radiusd を再起動してください。
-    
-
-* * *
-
-eduroam JP参加時の注意事項
-------------------
+# eduroam JP参加時の注意事項
 
 eduroam JPのトップレベルRADIUS proxyに接続する際に、機関側の設定不足によって認証連携がうまく動作しない例が散見されます。事務局の負担軽減のため、問い合わせの前に以下の点を確認、修正するようにお願いします。
-
-*   **RADIUSサーバ上のFirewallでRADIUSの通信がブロックされていないか?**  
-        OSのFirewallの設定で、RADIUSプロトコルが使用するポート(1812/udp)を開けてください。
-*   **機関のFirewallでRADIUSの通信がブロックされていないか?**  
-        機関のFirewallの設定で、RADIUSプロトコルが使用するポート(1812/udp)を開けてください。
-*   **正しい共通鍵を使用しているか?**  
-        RADIUSのサーバソフトウェアまたはアプライアンスによって、共通鍵の最大長や、利用できる字種に違いがあります。ご利用の環境に合った鍵を申請書に記入してください。
-*   **レルムの転送処理が正しいか?**  
-        自機関のレルムの付いた認証要求をeduroam JPのサーバに転送すると、動作不安定の原因になります。特に正規表現の利用には十分に注意し、このような不正な転送が行われないようにしてください。  
-        負荷軽減のため、レルム無しの認証要求をeduroam JPのサーバに転送しないでください。
+* **RADIUSサーバ上のFirewallでRADIUSの通信がブロックされていないか?**  
+  OSのFirewallの設定で、RADIUSプロトコルが使用するポート(1812/udp)を開けてください。
+* **機関のFirewallでRADIUSの通信がブロックされていないか?**  
+  機関のFirewallの設定で、RADIUSプロトコルが使用するポート(1812/udp)を開けてください。
+* **正しい共通鍵を使用しているか?**  
+  RADIUSのサーバソフトウェアまたはアプライアンスによって、共通鍵の最大長や、利用できる字種に違いがあります。ご利用の環境に合った鍵を申請書に記入してください。
+* **レルムの転送処理が正しいか?**  
+  自機関のレルムの付いた認証要求をeduroam JPのサーバに転送すると、動作不安定の原因になります。特に正規表現の利用には十分に注意し、このような不正な転送が行われないようにしてください。  
+  負荷軽減のため、レルム無しの認証要求をeduroam JPのサーバに転送しないでください。
