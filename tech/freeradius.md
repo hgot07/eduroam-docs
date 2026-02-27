@@ -22,7 +22,7 @@ title: FreeRADIUS 3 によるRADIUSサーバ構築
 --
 
 * 本ドキュメントは FreeRADIUSの **3.2.0** を対象に記述。
-    > [!WARNING]
+    > [!WARNING]  
     > FreeRADIUS 3.0.25 以前にはTLSの処理が不安定になる不具合があるため、必ず 3.2.0 以降を使う必要があります。
 * 機関ドメイン example.ac.jp のトップレベルのサーバ(RADIUS proxy)の設定を想定。小規模なIdPとしても利用可能とする。
 * 認証方式は PEAP/EAP-TTLS両用 (MS-CHAPv2) とする。
