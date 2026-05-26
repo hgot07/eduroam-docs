@@ -106,7 +106,29 @@ title: FreeRADIUS 3 によるRADIUSサーバ構築
     * テスト用コマンドで認証が成功すると"Access-Accept"と表示されます。
     * 最後のradtestはinner-tunnelの確認のためのもので、もしこれが認証失敗する場合は、実際の端末からの認証が失敗することになります。
     * 正常動作が確認できたら、オプション `-fxxl stdout` を付けないで `radiusd` を起動します。システム起動時に `radiusd` が立ち上がるように、OSのスタートアップファイルに追記します (使用しているOSやディストリビューションによって設定方法が異なります)。
-4. 動作確認後は、必ずテスト用アカウントを削除して、`radiusd` を再起動してください。
+4. radtestコマンドでは、サーバ認証やEAPの試験ができません。eapol_testコマンドを使った動作確認も行ってください。eapol_test コマンドは、wpa_supplicant の一部として提供されていることが多いでしょう。
+    * eap-test.confのような名前でテキストファイルを作成します。OSにバンドルされている証明書ストアの位置は、ディストリビューションによって調整してください。ドメイン名はサーバ証明書のCN/SANに合わせてください。
+   ```
+   # EAP-TTLS (MSCHAPv2)の場合
+   network={
+       ssid="eduroam"
+       key_mgmt=WPA-EAP
+       eap=TTLS
+       anonymous_identity="anonymous@example.ac.jp"
+       identity="ユーザ名@example.ac.jp"
+       password="パスワード"
+       ca_cert="/etc/ssl/certs/ca-bundle.crt"
+       domain_suffix_match="rad1.example.ac.jp"
+       phase2="autheap=MSCHAPV2"
+   }
+   ```
+    * 次のようにコマンドを実行します。SUCCESSになれば認証成功です。  
+    もし結果が FAILURE になって、`domain_suffix_match=` を外すと SUCCESS になるような場合は、サーバ認証の設定に間違いがあります。
+   ```
+   # eapol_test -c eap-test.conf -s testing123
+   ```
+
+5. 動作確認後は、必ずテスト用アカウントを削除して、`radiusd` を再起動してください。
     
 # eduroam JPプロキシ接続時の注意事項
 
