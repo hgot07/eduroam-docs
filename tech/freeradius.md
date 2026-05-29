@@ -57,11 +57,13 @@ title: FreeRADIUS 3 によるRADIUSサーバ構築
     * **radiusd.conf**  
     認証ログを残すために `auth = yes` とする必要があります。
     * **proxy.conf**  
+    元のファイルをテンプレートのファイルで上書きしてください。  
     ファイル中の `<JP proxyX addr>` と `<JP proxyX secret key>` に、eduroam 接続時にeduroam JP事務局から通知されるIPアドレスと共通鍵をそれぞれ設定してください。  
     realmの example を自機関名に書き換えてください (2個所 + nonexistent仮想サーバのメッセージ部分)。eduroam JPのサーバとの間でループが生じないように、機関レルム(例: example.ac.jp) に末尾がマッチするレルムはすべて、機関側のRADIUS proxyで終端する必要があります。  
     機関内の別のRADIUS IdPに認証要求を転送する場合は、IdP1/IdP2の設定例を参考にしてください。  
     オプション `status_check = status-server` は、相手サーバの死活監視を効率よく行うためのものです。FreeRADIUSを含む多くのRADIUSサーバがこの機能に対応していますが、もし機関内の認証サーバ(RADIUS IdP)との接続がうまくいかない場合は、このオプションを外してみてください。
     * **clients.conf**  
+    元のファイルをテンプレートのファイルで上書きしてください。  
     ファイル中の `<JP proxyX addr>` と `<JP proxyX secret key>` に、eduroam JP事務局から通知されるIPアドレスと共通鍵をそれぞれ設定してください。  
     機関内の無線LANコントローラや、他のRADIUS proxyも、このファイルに記述することでアクセス許可されます。
     * **mods-available/eap**  

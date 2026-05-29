@@ -1,11 +1,11 @@
 ---
 layout: page
-title: ダイナミック認証VLAN
+title: 認証VLAN (Dynamic VLAN)
 ---
 
-FreeRADIUSを用いて、ダイナミック認証VLANの実現するための設定例です。ダイナミック認証VLANとは、同一ESSID (eduroam) で接続した際に、認証されたユーザごとに異なる定められたVLANに接続する方法のことです。この機能を利用すると、たとえば、教員用ネットワーク、学生用ネットワーク、ビジター用ネットワークの3つを用意しておき、ネットワークに接続するユーザの属性に応じて接続先のネットワークを切り替えることができます。
+FreeRADIUSを用いて、認証VLAN (Dynamic VLAN)を実現するための設定例です。認証VLANとは、同一SSID (eduroam) で接続した際に、認証されたユーザごとに異なるVLANに接続する方法のことです。この機能を利用すると、たとえば、教職員用ネットワーク、学生用ネットワーク、ビジター用ネットワークの3つを用意しておき、ネットワークに接続するユーザの属性に応じて接続先のネットワークを切り替えることができます。
 
-### 1) ダイナミックVLAN設定に必要なRADIUSのパラメータ
+### 1) 認証VLAN設定に必要なRADIUSのパラメータ
 
 Tunnel-Type, Tunnel-Medium-Type, Tunnel-Private-Group-Id の3つを設定し、アクセスポイントに渡す必要がある。
 
@@ -15,7 +15,7 @@ Tunnel-Type = 13
 Tunnel-Medium-Type = 6  
 Tunnel-Private-Group-Id = 100 (VLAN番号)
 
-数値を指定する代わりに、数値に対応して定義された文字列をしていることも可能（アクセスポイント側の仕様を確認のこと）。
+数値を指定する代わりに、数値に対応して定義された文字列を指定することも可能（アクセスポイント側の仕様を確認のこと）。
 
 Tunnel-Type = VLAN  
 Tunnel-Medium-Type = IEEE-802  
@@ -32,7 +32,7 @@ test    Cleartext-Password := "Password", Realm == "example.jp"
 
 ### 3) パラメータの中継
 
-FreeRADIUSをプロキシサーバとして利用する場合、ダイナミックVLANに関連するパラメータは、デフォルトで「中継」しない設定になっている。もしプロキシサーバにおいてパラメータの中継が必要な場合（組織内でプロキシサーバを多段で運用している等）は、設定の変更が必要である。  
+FreeRADIUSをプロキシサーバとして利用する場合、VLANに関連するパラメータは、デフォルトで「中継」しない設定になっている。もしプロキシサーバにおいてパラメータの中継が必要な場合（組織内でプロキシサーバを多段で運用している等）は、設定の変更が必要である。  
 （一般的な環境では、このような「中継」の設定は不要。）
 
 raddb/mods-config/attr\_filter/post-proxy ファイルの最後にある DEFAULT の定義の中に以下の行を追加する。（継続の "," を忘れずに）
@@ -44,11 +44,11 @@ DEFAULT
         Tunnel-Private-Group-Id =\* ANY,  
         (略)
 
-### 4) 特定のレルムに対するダイナミックVLANパラメータの追加
+### 4) 特定のレルムに対するVLANパラメータの追加
 
 通常は、ローカルの認証サーバと連携する際に、ユーザ毎に事前に定義される、利用させたいVLANが受け渡されるように設定を行う。
 
-別の方法として、認証時に、特定のレルムに対してダイナミックVLANを設定したいような場合は、mods-config/attr\_filter/post-proxy ファイルに以下のようなレルムの設定を追加する。
+別の方法として、認証時に、特定のレルムに対してVLANを設定したいような場合は、mods-config/attr\_filter/post-proxy ファイルに以下のようなレルムの設定を追加する。
 
 example.ac.jp  
         Tunnel-Type := 13,  
@@ -64,7 +64,7 @@ DEFAULT では、Tunnel-Type, Tunnel-Medium-Type, Tunnel-Private-Group-Id の定
 
 なお、VLAN番号の指定がない場合に、どのVLANに接続するかは、アクセスポイントに設定する。
 
-### 5) それ以外のレルムに対するダイナミックVLANパラメータの追加
+### 5) それ以外のレルムに対するVLANパラメータの追加
 
 前項 4) に加えて、それ以外のレルムに対してVLAN番号を設定したい場合には、mods-config/attr\_filter/post-proxy ファイルにおいて以下のように設定する。
 
@@ -92,7 +92,7 @@ network={
      eapol\_flags=255  
      key\_mgmt=WPA-EAP  
      eap=PEAP  
-     identity=[test@example.jp](mailto:test@example.jp)  
+     identity="test@example.jp"
      password="Password"  
      phase2="autheap=GTC"  
 }
